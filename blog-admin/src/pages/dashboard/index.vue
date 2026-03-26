@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue';
 
-import { useBlogAdmin } from '@/composables/useBlogAdmin'
+import { useBlogAdmin } from '@/composables/useBlogAdmin';
 
-const { postsByCategory, postsByStatus, projects, about, init } = useBlogAdmin()
-const techCount = computed(() => postsByCategory('tech').length)
-const reviewCount = computed(() => postsByCategory('review').length)
-const draftCount = computed(() => postsByStatus('draft').length)
+const { postsByCategory, postsByStatus, projects, about, init } = useBlogAdmin();
+const techCount = computed(() => postsByCategory('tech').length);
+const reviewCount = computed(() => postsByCategory('review').length);
+const draftCount = computed(() => postsByStatus('draft').length);
 
-onMounted(init)
+onMounted(init);
 </script>
 
 <template>

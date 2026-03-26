@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue';
 
-import { getProjects } from '@/services/projects'
+import { getProjects } from '@/services/projects';
 
-const projects = ref<Awaited<ReturnType<typeof getProjects>>>([])
+const projects = ref<Awaited<ReturnType<typeof getProjects>>>([]);
 
 onMounted(async () => {
-  projects.value = await getProjects()
-})
+  projects.value = await getProjects();
+});
 </script>
 
 <template>
@@ -16,11 +16,7 @@ onMounted(async () => {
     <p class="text-gray-600">这里展示我做过的一些项目，点击可跳转到项目地址。</p>
 
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <a-card
-        v-for="project in projects"
-        :key="project.name"
-        class="h-full"
-      >
+      <a-card v-for="project in projects" :key="project.name" class="h-full">
         <h2 class="text-lg font-semibold text-gray-900">{{ project.name }}</h2>
         <p class="mt-2 text-gray-700">{{ project.description }}</p>
 
@@ -30,12 +26,7 @@ onMounted(async () => {
           </a-tag>
         </div>
 
-        <a
-          :href="project.url"
-          target="_blank"
-          rel="noreferrer noopener"
-          class="mt-4 inline-block"
-        >
+        <a :href="project.url" target="_blank" rel="noreferrer noopener" class="mt-4 inline-block">
           <a-button type="primary">查看项目</a-button>
         </a>
       </a-card>

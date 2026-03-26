@@ -1,36 +1,37 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { computed, onMounted, ref } from 'vue';
+import { RouterLink } from 'vue-router';
 
-import { getPostsByCategory } from '@/services/posts'
+import { getPostsByCategory } from '@/services/posts';
 
-const keyword = ref('')
-const activeTag = ref<string | undefined>(undefined)
-const techPosts = ref<Awaited<ReturnType<typeof getPostsByCategory>>>([])
+const keyword = ref('');
+const activeTag = ref<string | undefined>(undefined);
+const techPosts = ref<Awaited<ReturnType<typeof getPostsByCategory>>>([]);
 
 const allTags = computed(() => {
-  const tags = new Set<string>()
+  const tags = new Set<string>();
   for (const post of techPosts.value) {
-    for (const tag of post.tags) tags.add(tag)
+    for (const tag of post.tags) tags.add(tag);
   }
-  return [...tags]
-})
+  return [...tags];
+});
 
 const filteredPosts = computed(() => {
-  const search = keyword.value.trim().toLowerCase()
+  const search = keyword.value.trim().toLowerCase();
   return techPosts.value.filter((post) => {
-    const inKeyword = search.length === 0
-      || post.title.toLowerCase().includes(search)
-      || post.summary.toLowerCase().includes(search)
-      || post.tags.some((tag) => tag.toLowerCase().includes(search))
-    const inTag = !activeTag.value || post.tags.includes(activeTag.value)
-    return inKeyword && inTag
-  })
-})
+    const inKeyword =
+      search.length === 0 ||
+      post.title.toLowerCase().includes(search) ||
+      post.summary.toLowerCase().includes(search) ||
+      post.tags.some((tag) => tag.toLowerCase().includes(search));
+    const inTag = !activeTag.value || post.tags.includes(activeTag.value);
+    return inKeyword && inTag;
+  });
+});
 
 onMounted(async () => {
-  techPosts.value = await getPostsByCategory('tech')
-})
+  techPosts.value = await getPostsByCategory('tech');
+});
 </script>
 
 <template>
@@ -40,17 +41,8 @@ onMounted(async () => {
 
     <a-card>
       <div class="grid gap-3 md:grid-cols-[1fr_auto]">
-        <a-input
-          v-model:value="keyword"
-          placeholder="搜索标题、摘要、标签"
-          allow-clear
-        />
-        <a-select
-          v-model:value="activeTag"
-          class="min-w-52"
-          allow-clear
-          placeholder="按标签筛选"
-        >
+        <a-input v-model:value="keyword" placeholder="搜索标题、摘要、标签" allow-clear />
+        <a-select v-model:value="activeTag" class="min-w-52" allow-clear placeholder="按标签筛选">
           <a-select-option v-for="tag in allTags" :key="tag" :value="tag">
             {{ tag }}
           </a-select-option>
@@ -58,12 +50,11 @@ onMounted(async () => {
       </div>
     </a-card>
 
-    <a-card
-      v-for="post in filteredPosts"
-      :key="post.slug"
-      class="rounded-xl"
-    >
-      <RouterLink :to="`/post/${post.slug}`" class="text-xl font-semibold text-gray-900 hover:text-blue-600 dark:text-gray-100">
+    <a-card v-for="post in filteredPosts" :key="post.slug" class="rounded-xl">
+      <RouterLink
+        :to="`/post/${post.slug}`"
+        class="text-xl font-semibold text-gray-900 hover:text-blue-600 dark:text-gray-100"
+      >
         {{ post.title }}
       </RouterLink>
       <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ post.date }}</p>

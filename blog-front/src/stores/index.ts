@@ -1,1 +1,1 @@
-export { useCounterStore } from './modules/counter'
+export { useCounterStore } from './modules/counter';

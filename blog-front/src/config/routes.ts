@@ -1,4 +1,4 @@
-import type { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -31,4 +31,4 @@ export const routes: RouteRecordRaw[] = [
     name: 'about',
     component: () => import('@/pages/about/index.vue'),
   },
-]
+];

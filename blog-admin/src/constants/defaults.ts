@@ -1,4 +1,4 @@
-import type { AboutProfile, AdminPost, AdminProject } from '@/types/content'
+import type { AboutProfile, AdminPost, AdminProject } from '@/types/content';
 
 export const defaultPosts: AdminPost[] = [
   {
@@ -21,7 +21,7 @@ export const defaultPosts: AdminPost[] = [
     category: 'review',
     status: 'draft',
   },
-]
+];
 
 export const defaultProjects: AdminProject[] = [
   {
@@ -31,11 +31,11 @@ export const defaultProjects: AdminProject[] = [
     url: 'https://github.com/',
     techStack: ['Vue3', 'Vite', 'Tailwind'],
   },
-]
+];
 
 export const defaultAbout: AboutProfile = {
   name: 'Ning',
   intro: '前端开发者，关注 Vue 工程化与效率工具。',
   email: 'ning@example.com',
   github: 'https://github.com/',
-}
+};

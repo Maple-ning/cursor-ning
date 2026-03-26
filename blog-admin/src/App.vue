@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+import { computed } from 'vue';
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 
-import { clearToken } from '@/utils/auth'
+import { clearToken } from '@/utils/auth';
 
 const navItems = [
   { to: '/', label: '概览' },
@@ -10,16 +10,16 @@ const navItems = [
   { to: '/posts/review', label: '读后感管理' },
   { to: '/projects', label: '项目展示管理' },
   { to: '/about', label: '关于我管理' },
-]
+];
 
-const route = useRoute()
-const router = useRouter()
-const isLoginPage = computed(() => route.path === '/login')
+const route = useRoute();
+const router = useRouter();
+const isLoginPage = computed(() => route.path === '/login');
 
 const logout = async () => {
-  clearToken()
-  await router.replace('/login')
-}
+  clearToken();
+  await router.replace('/login');
+};
 </script>
 
 <template>

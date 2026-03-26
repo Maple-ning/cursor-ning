@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue';
 
-import { useBlogAdmin } from '@/composables/useBlogAdmin'
+import { useBlogAdmin } from '@/composables/useBlogAdmin';
 
-const { projects, upsertProject, deleteProject, init } = useBlogAdmin()
-const modalOpen = ref(false)
+const { projects, upsertProject, deleteProject, init } = useBlogAdmin();
+const modalOpen = ref(false);
 
 const form = reactive({
   id: undefined as number | undefined,
@@ -12,46 +12,49 @@ const form = reactive({
   description: '',
   url: '',
   techStackText: '',
-})
+});
 
 const reset = () => {
-  form.id = undefined
-  form.name = ''
-  form.description = ''
-  form.url = ''
-  form.techStackText = ''
-}
+  form.id = undefined;
+  form.name = '';
+  form.description = '';
+  form.url = '';
+  form.techStackText = '';
+};
 
 const openCreate = () => {
-  reset()
-  modalOpen.value = true
-}
+  reset();
+  modalOpen.value = true;
+};
 
 const editItem = (id: number) => {
-  const item = projects.value.find((p) => p.id === id)
-  if (!item) return
-  form.id = item.id
-  form.name = item.name
-  form.description = item.description
-  form.url = item.url
-  form.techStackText = item.techStack.join(', ')
-  modalOpen.value = true
-}
+  const item = projects.value.find((p) => p.id === id);
+  if (!item) return;
+  form.id = item.id;
+  form.name = item.name;
+  form.description = item.description;
+  form.url = item.url;
+  form.techStackText = item.techStack.join(', ');
+  modalOpen.value = true;
+};
 
 const submit = async () => {
-  if (!form.name || !form.description || !form.url) return
+  if (!form.name || !form.description || !form.url) return;
   await upsertProject({
     id: form.id || undefined,
     name: form.name,
     description: form.description,
     url: form.url,
-    techStack: form.techStackText.split(',').map((t) => t.trim()).filter(Boolean),
-  })
-  reset()
-  modalOpen.value = false
-}
+    techStack: form.techStackText
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean),
+  });
+  reset();
+  modalOpen.value = false;
+};
 
-onMounted(init)
+onMounted(init);
 </script>
 
 <template>
@@ -63,7 +66,12 @@ onMounted(init)
       <div class="space-y-3">
         <a-card v-for="item in projects" :key="item.id" size="small">
           <p class="font-semibold text-gray-900">{{ item.name }}</p>
-          <a :href="item.url" target="_blank" rel="noreferrer noopener" class="text-sm text-blue-600 hover:underline">
+          <a
+            :href="item.url"
+            target="_blank"
+            rel="noreferrer noopener"
+            class="text-sm text-blue-600 hover:underline"
+          >
             {{ item.url }}
           </a>
           <p class="mt-2 text-sm text-gray-700">{{ item.description }}</p>

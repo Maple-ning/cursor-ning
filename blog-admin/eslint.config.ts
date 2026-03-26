@@ -1,9 +1,9 @@
-import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
-import { globalIgnores } from 'eslint/config'
-import eslintConfigPrettier from 'eslint-config-prettier/flat'
-import { importX } from 'eslint-plugin-import-x'
-import pluginOxlint from 'eslint-plugin-oxlint'
-import pluginVue from 'eslint-plugin-vue'
+import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript';
+import { globalIgnores } from 'eslint/config';
+import eslintConfigPrettier from 'eslint-config-prettier/flat';
+import { importX } from 'eslint-plugin-import-x';
+import pluginOxlint from 'eslint-plugin-oxlint';
+import pluginVue from 'eslint-plugin-vue';
 
 export default defineConfigWithVueTs(
   {
@@ -40,7 +40,16 @@ export default defineConfigWithVueTs(
       'import-x/order': [
         'warn',
         {
-          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'type', 'object'],
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
+            'type',
+            'object',
+          ],
           'newlines-between': 'always',
           alphabetize: { order: 'asc', caseInsensitive: true },
           pathGroups: [{ pattern: '@/**', group: 'internal', position: 'after' }],
@@ -63,5 +72,5 @@ export default defineConfigWithVueTs(
     },
   },
 
-  eslintConfigPrettier,
-)
+  eslintConfigPrettier
+);

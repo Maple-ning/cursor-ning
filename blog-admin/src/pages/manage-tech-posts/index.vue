@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue';
 
-import { useBlogAdmin } from '@/composables/useBlogAdmin'
+import { useBlogAdmin } from '@/composables/useBlogAdmin';
 
-const { postsByCategory, upsertPost, deletePost, init } = useBlogAdmin()
-const posts = computed(() => postsByCategory('tech'))
-const modalOpen = ref(false)
+const { postsByCategory, upsertPost, deletePost, init } = useBlogAdmin();
+const posts = computed(() => postsByCategory('tech'));
+const modalOpen = ref(false);
 
 const form = reactive({
   id: undefined as number | undefined,
@@ -15,53 +15,56 @@ const form = reactive({
   tagsText: '',
   date: '',
   status: 'draft' as 'draft' | 'published',
-})
+});
 
 const reset = () => {
-  form.id = undefined
-  form.title = ''
-  form.summary = ''
-  form.content = ''
-  form.tagsText = ''
-  form.date = ''
-  form.status = 'draft'
-}
+  form.id = undefined;
+  form.title = '';
+  form.summary = '';
+  form.content = '';
+  form.tagsText = '';
+  form.date = '';
+  form.status = 'draft';
+};
 
 const openCreate = () => {
-  reset()
-  modalOpen.value = true
-}
+  reset();
+  modalOpen.value = true;
+};
 
 const editItem = (id: number) => {
-  const item = posts.value.find((p) => p.id === id)
-  if (!item) return
-  form.id = item.id
-  form.title = item.title
-  form.summary = item.summary
-  form.content = item.content
-  form.tagsText = item.tags.join(', ')
-  form.date = item.date
-  form.status = item.status
-  modalOpen.value = true
-}
+  const item = posts.value.find((p) => p.id === id);
+  if (!item) return;
+  form.id = item.id;
+  form.title = item.title;
+  form.summary = item.summary;
+  form.content = item.content;
+  form.tagsText = item.tags.join(', ');
+  form.date = item.date;
+  form.status = item.status;
+  modalOpen.value = true;
+};
 
 const submit = async () => {
-  if (!form.title || !form.summary || !form.date) return
+  if (!form.title || !form.summary || !form.date) return;
   await upsertPost({
     id: form.id || undefined,
     title: form.title,
     summary: form.summary,
     content: form.content || form.summary,
-    tags: form.tagsText.split(',').map((t) => t.trim()).filter(Boolean),
+    tags: form.tagsText
+      .split(',')
+      .map((t) => t.trim())
+      .filter(Boolean),
     date: form.date,
     category: 'tech',
     status: form.status,
-  })
-  reset()
-  modalOpen.value = false
-}
+  });
+  reset();
+  modalOpen.value = false;
+};
 
-onMounted(init)
+onMounted(init);
 </script>
 
 <template>

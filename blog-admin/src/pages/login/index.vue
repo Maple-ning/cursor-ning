@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-import { loginApi } from '@/api/modules/auth'
-import { setRefreshToken, setToken } from '@/utils/auth'
+import { loginApi } from '@/api/modules/auth';
+import { setRefreshToken, setToken } from '@/utils/auth';
 
-const router = useRouter()
-const loading = ref(false)
-const errorMessage = ref('')
+const router = useRouter();
+const loading = ref(false);
+const errorMessage = ref('');
 
 const form = reactive({
   username: 'admin',
   password: 'admin123',
-})
+});
 
 const submit = async () => {
-  loading.value = true
-  errorMessage.value = ''
+  loading.value = true;
+  errorMessage.value = '';
   try {
-    const data = await loginApi(form.username, form.password)
-    setToken(data.token)
-    setRefreshToken(data.refreshToken)
-    await router.replace('/')
+    const data = await loginApi(form.username, form.password);
+    setToken(data.token);
+    setRefreshToken(data.refreshToken);
+    await router.replace('/');
   } catch (error: unknown) {
-    const err = error as { response?: { data?: { message?: string } } }
-    errorMessage.value = err?.response?.data?.message || '网络异常，请稍后重试'
+    const err = error as { response?: { data?: { message?: string } } };
+    errorMessage.value = err?.response?.data?.message || '网络异常，请稍后重试';
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 </script>
 
 <template>

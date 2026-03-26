@@ -1,4 +1,4 @@
-import type { RouteRecordRaw } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router';
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -32,4 +32,4 @@ export const routes: RouteRecordRaw[] = [
     name: 'manage-about',
     component: () => import('@/pages/manage-about/index.vue'),
   },
-]
+];

@@ -1,10 +1,10 @@
 ---
-title: "从 0 到 1 搭建前端工程化模板"
-slug: "frontend-starter-template-notes"
-date: "2026-03-17"
-tags: ["Vite", "ESLint", "Tailwind"]
-category: "tech"
-summary: "记录了用 Vite 构建模板时，如何平衡开发效率、规范和打包体积。"
+title: '从 0 到 1 搭建前端工程化模板'
+slug: 'frontend-starter-template-notes'
+date: '2026-03-17'
+tags: ['Vite', 'ESLint', 'Tailwind']
+category: 'tech'
+summary: '记录了用 Vite 构建模板时，如何平衡开发效率、规范和打包体积。'
 ---
 
 我通常会优先考虑三个目标：快、稳、可扩展。
