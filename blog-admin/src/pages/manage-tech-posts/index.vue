@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue';
 
+import AdminPostMarkdownEditor from '@/components/AdminPostMarkdownEditor.vue';
 import { useBlogAdmin } from '@/composables/useBlogAdmin';
 
 const { postsByCategory, upsertPost, deletePost, init } = useBlogAdmin();
@@ -73,7 +74,7 @@ onMounted(init);
       <template #extra>
         <a-button type="primary" @click="openCreate">新增技术分享</a-button>
       </template>
-      <div class="space-y-3">
+      <div class="flex flex-col gap-4">
         <a-card v-for="item in posts" :key="item.id" size="small">
           <p class="font-semibold text-gray-900">{{ item.title }}</p>
           <p class="mt-1 text-sm text-gray-500">{{ item.date }}</p>
@@ -89,6 +90,7 @@ onMounted(init);
           </div>
         </a-card>
       </div>
+      <a-empty v-if="posts.length === 0" description="暂无内容" />
     </a-card>
 
     <a-modal
@@ -96,6 +98,10 @@ onMounted(init);
       :title="form.id ? '编辑技术分享' : '新增技术分享'"
       ok-text="保存"
       cancel-text="取消"
+      width="min(1180px, 96vw)"
+      :style="{ top: '28px' }"
+      :styles="{ body: { maxHeight: 'calc(100vh - 120px)', overflowY: 'auto' } }"
+      wrap-class-name="post-edit-modal-wide"
       @ok="submit"
       @cancel="reset"
     >
@@ -108,7 +114,11 @@ onMounted(init);
           <a-select-option value="draft">草稿</a-select-option>
           <a-select-option value="published">发布</a-select-option>
         </a-select>
-        <a-textarea v-model:value="form.content" :rows="6" placeholder="正文" />
+        <AdminPostMarkdownEditor
+          :key="form.id ?? 'create-tech'"
+          v-model="form.content"
+          editor-id="admin-tech-post-md"
+        />
       </div>
     </a-modal>
   </section>

@@ -23,3 +23,12 @@ export interface ProjectApiItem {
   tech_stack: unknown;
   url: string;
 }
+
+export interface GoodSiteApiItem {
+  id: number;
+  title: string;
+  url: string;
+  description: string;
+  category: string;
+  sort_order: number;
+}

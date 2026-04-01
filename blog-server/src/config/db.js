@@ -16,6 +16,8 @@ const pool = mysql.createPool({
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME,
   charset: 'utf8mb4',
+  // Keep DATE/DATETIME as strings to avoid timezone shift (e.g. 2026-03-31 -> 2026-03-30)
+  dateStrings: true,
   waitForConnections: true,
   connectionLimit: 10,
 })

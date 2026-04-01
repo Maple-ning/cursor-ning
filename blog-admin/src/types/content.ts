@@ -26,3 +26,12 @@ export interface AboutProfile {
   email: string;
   github: string;
 }
+
+export interface AdminGoodSite {
+  id: number;
+  title: string;
+  url: string;
+  description: string;
+  category: string;
+  sortOrder: number;
+}

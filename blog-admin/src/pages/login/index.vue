@@ -33,7 +33,7 @@ const submit = async () => {
 
 <template>
   <div class="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-    <a-card title="Blog Admin 登录" class="w-full max-w-md">
+    <a-card title="枫叶小站后台登录" class="w-full max-w-md">
       <div class="grid gap-3">
         <a-input v-model:value="form.username" placeholder="用户名" />
         <a-input-password v-model:value="form.password" placeholder="密码" />

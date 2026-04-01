@@ -63,7 +63,7 @@ onMounted(init);
       <template #extra>
         <a-button type="primary" @click="openCreate">新增项目</a-button>
       </template>
-      <div class="space-y-3">
+      <div class="flex flex-col gap-4">
         <a-card v-for="item in projects" :key="item.id" size="small">
           <p class="font-semibold text-gray-900">{{ item.name }}</p>
           <a
@@ -86,6 +86,7 @@ onMounted(init);
           </div>
         </a-card>
       </div>
+      <a-empty v-if="projects.length === 0" description="暂无内容" />
     </a-card>
 
     <a-modal

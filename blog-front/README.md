@@ -1,48 +1,65 @@
 # blog-front（博客前台）
 
-This template should help get you started developing with Vue 3 in Vite.
+基于 `Vue 3 + Vite + TypeScript + Pinia + Vue Router` 的博客前台项目。
 
-## Recommended IDE Setup
+## 环境要求
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Node.js：`^20.19.0 || >=22.12.0`
+- 包管理器：`npm`
 
-## Recommended Browser Setup
+## 推荐开发环境
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+- IDE：`VS Code`
+- 插件：[Vue - Official (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+- 浏览器插件：Vue Devtools
 
-## Type Support for `.vue` Imports in TS
+## 安装依赖
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+## 本地开发
 
-```sh
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## 质量检查
 
-```sh
+```bash
+npm run lint
+npm run type-check
+npm run test
+npm run check
+```
+
+说明：
+
+- `lint`：运行 `oxlint + eslint`
+- `check`：运行 `lint + type-check + test + build-only`
+
+## 打包构建
+
+```bash
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## 目录说明（核心）
 
-```sh
-npm run lint
+```text
+src/
+├── api/            # 接口请求层
+├── services/       # 业务数据编排层
+├── pages/          # 路由页面
+├── components/     # 公共组件
+├── stores/         # 状态管理
+├── config/         # 应用配置与路由配置
+├── constants/      # 常量定义
+└── utils/          # 工具函数
 ```
+
+## 相关文档
+
+- 前端规范：`../前端规范.md`
+- Vite 配置参考：[https://vite.dev/config/](https://vite.dev/config/)

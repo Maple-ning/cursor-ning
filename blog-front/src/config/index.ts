@@ -1,5 +1,5 @@
 export const appConfig = {
-  apiBaseUrl: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api',
-  appTitle: import.meta.env.VITE_APP_TITLE || '博客',
+  apiBaseUrl: import.meta.env.VITE_API_BASE_URL || '/api-blog',
+  appTitle: import.meta.env.VITE_APP_TITLE || '枫叶小站',
   requestTimeout: 10_000,
 } as const;

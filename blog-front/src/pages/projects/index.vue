@@ -12,13 +12,13 @@ onMounted(async () => {
 
 <template>
   <section class="space-y-4">
-    <h1 class="text-2xl font-bold text-gray-900">项目展示</h1>
-    <p class="text-gray-600">这里展示我做过的一些项目，点击可跳转到项目地址。</p>
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">项目展示</h1>
+    <p class="text-gray-600 dark:text-gray-300">这里展示我做过的一些项目，点击可跳转到项目地址。</p>
 
     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <a-card v-for="project in projects" :key="project.name" class="h-full">
-        <h2 class="text-lg font-semibold text-gray-900">{{ project.name }}</h2>
-        <p class="mt-2 text-gray-700">{{ project.description }}</p>
+      <a-card v-for="project in projects" :key="project.name" class="blog-card-lift h-full">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ project.name }}</h2>
+        <p class="mt-2 text-gray-700 dark:text-gray-300">{{ project.description }}</p>
 
         <div class="mt-3 flex flex-wrap gap-2">
           <a-tag v-for="tech in project.techStack" :key="tech" color="geekblue">
@@ -31,5 +31,6 @@ onMounted(async () => {
         </a>
       </a-card>
     </div>
+    <a-empty v-if="projects.length === 0" description="暂无内容" />
   </section>
 </template>

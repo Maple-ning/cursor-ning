@@ -1,28 +1,48 @@
 @import 'tailwindcss';
 @custom-variant dark (&:where(.dark, .dark *));
 
+html {
+  overflow-y: auto;
+}
+
+body {
+  min-height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+}
+
+/* 暗黑切换时 Ant 组件颜色过渡更顺滑（与顶栏 300ms 接近） */
+.ant-card,
+.ant-btn,
+.ant-input-affix-wrapper,
+.ant-select-selector {
+  transition:
+    background-color 0.28s ease,
+    color 0.28s ease,
+    border-color 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
 .home-section-card {
   margin: 0;
 }
 
-.dark .dark-mode-card {
-  background: #111827;
-  border-color: #1f2937;
+.blog-card-lift {
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
 }
-
-.dark .ant-card {
-  background: #111827;
-  border-color: #1f2937;
-  box-shadow: none;
+.blog-card-lift:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 18px 40px -12px rgb(15 23 42 / 0.12),
+    0 8px 16px -8px rgb(15 23 42 / 0.08);
 }
-
-.dark .ant-card-head {
-  color: #f3f4f6;
-  border-bottom-color: #1f2937;
-}
-
-.dark .ant-card-body {
-  color: #d1d5db;
+.dark .blog-card-lift:hover {
+  box-shadow:
+    0 18px 36px -10px rgb(0 0 0 / 0.5),
+    0 8px 20px -8px rgb(0 0 0 / 0.35);
 }
 
 .dark .ant-input,
@@ -45,10 +65,33 @@
 
 .markdown-body h1,
 .markdown-body h2,
-.markdown-body h3 {
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
   margin-top: 1.2rem;
   margin-bottom: 0.6rem;
   font-weight: 700;
+}
+
+html.dark .markdown-body {
+  color: #e5e7eb;
+}
+
+html.dark .markdown-body :where(h1, h2, h3, h4, h5, h6) {
+  color: #f9fafb;
+}
+
+.markdown-body h1 {
+  font-size: 1.75rem;
+}
+
+.markdown-body h2 {
+  font-size: 1.4rem;
+}
+
+.markdown-body h3 {
+  font-size: 1.2rem;
 }
 
 .markdown-body p {
@@ -62,8 +105,109 @@
   padding-left: 1.2rem;
 }
 
+.markdown-body ul {
+  list-style: disc;
+}
+
+.markdown-body ol {
+  list-style: decimal;
+}
+
 .markdown-body li {
+  list-style: inherit;
   margin: 0.35rem 0;
+}
+
+.markdown-body blockquote {
+  margin: 0.8rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid rgb(203 213 225);
+  background: rgb(248 250 252);
+  color: rgb(51 65 85);
+}
+
+.dark .markdown-body blockquote {
+  border-left-color: rgb(71 85 105);
+  background: rgb(30 41 59 / 0.6);
+  color: rgb(203 213 225);
+}
+
+.markdown-body hr {
+  margin: 1.25rem 0;
+  border: 0;
+  border-top: 1px solid rgb(226 232 240);
+}
+
+.dark .markdown-body hr {
+  border-top-color: rgb(51 65 85);
+}
+
+.markdown-body pre {
+  margin: 0.9rem 0;
+  padding: 1rem;
+  overflow-x: auto;
+  border-radius: 0.375rem;
+  background: rgb(241 245 249);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.dark .markdown-body pre {
+  background: rgb(15 23 42);
+}
+
+.markdown-body pre code {
+  padding: 0;
+  background: transparent;
+  font-size: inherit;
+}
+
+.markdown-body table {
+  margin: 0.9rem 0;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid rgb(226 232 240);
+  padding: 0.45rem 0.65rem;
+  text-align: left;
+}
+
+.dark .markdown-body th,
+.dark .markdown-body td {
+  border-color: rgb(51 65 85);
+}
+
+.markdown-body th {
+  background: rgb(248 250 252);
+  font-weight: 600;
+}
+
+.dark .markdown-body th {
+  background: rgb(30 41 59);
+}
+
+.markdown-body a {
+  color: rgb(37 99 235);
+  text-decoration: underline;
+}
+
+.markdown-body a:hover {
+  color: rgb(29 78 216);
+}
+
+.dark .markdown-body a {
+  color: rgb(96 165 250);
+}
+
+.markdown-body img {
+  margin: 0.75rem 0;
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.25rem;
 }
 
 .markdown-body code {
@@ -74,4 +218,40 @@
 
 .dark .markdown-body code {
   background: #1f2937;
+}
+
+@keyframes good-site-wiggle {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(-2px, 1px) rotate(-1.2deg);
+  }
+  40% {
+    transform: translate(2px, -1px) rotate(1.2deg);
+  }
+  60% {
+    transform: translate(-1px, -1px) rotate(-0.8deg);
+  }
+  80% {
+    transform: translate(1px, 1px) rotate(0.8deg);
+  }
+}
+
+.good-site-card:hover {
+  animation: good-site-wiggle 0.45s ease-in-out;
+  border-color: rgb(59 130 246);
+  background-color: rgb(239 246 255);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.08),
+    0 4px 6px -4px rgb(0 0 0 / 0.06);
+}
+
+.dark .good-site-card:hover {
+  border-color: rgb(96 165 250);
+  background-color: rgb(30 41 59 / 0.85);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.35),
+    0 4px 6px -4px rgb(0 0 0 / 0.25);
 }

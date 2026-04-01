@@ -13,7 +13,7 @@ export const defaultPosts: AdminPost[] = [
   },
   {
     id: 2,
-    title: '《深度工作》观后感',
+    title: '《深度工作》读后感',
     summary: '如何减少上下文切换，提高深度学习效率。',
     content: '正文内容...',
     tags: ['读后感', '效率'],
@@ -26,7 +26,7 @@ export const defaultPosts: AdminPost[] = [
 export const defaultProjects: AdminProject[] = [
   {
     id: 1,
-    name: '个人博客前台',
+    name: '枫叶小站前台',
     description: '用于展示技术文章、读后感和项目卡片。',
     url: 'https://github.com/',
     techStack: ['Vue3', 'Vite', 'Tailwind'],

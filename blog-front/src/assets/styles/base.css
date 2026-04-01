@@ -58,8 +58,16 @@
   font-weight: normal;
 }
 
+html {
+  height: 100%;
+  overflow-y: auto;
+}
+
 body {
   min-height: 100vh;
+  overflow-y: scroll !important;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
   color: var(--color-text);
   background: var(--color-background);
   transition:

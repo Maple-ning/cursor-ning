@@ -37,8 +37,10 @@ function Build-Frontend {
   Write-Host "==> Building frontend: $name"
   Push-Location $localPath
   try {
-    # npm stdout must not enter the function output stream (would break return $archivePath).
-    npm run build 2>&1 | Out-Host
+    npm run build | Out-Host
+    if ($LASTEXITCODE -ne 0) {
+      throw "Frontend build failed: $name"
+    }
   }
   finally {
     Pop-Location
@@ -182,6 +184,7 @@ if ! command -v pm2 >/dev/null 2>&1; then
 fi
 
 mkdir -p '$backendRemotePath/app'
+mkdir -p '$backendRemotePath/shared/chat-uploads'
 rm -rf '$backendRemotePath/app'/*
 tar -xzf '$remoteTmp/backend.tar.gz' -C '$backendRemotePath/app'
 
@@ -195,11 +198,11 @@ fi
 cd '$backendRemotePath/app'
 npm ci --omit=dev
 
+# Recreate PM2 app so script path/cwd stay under app/ (restart alone does not update them).
 if pm2 describe '$processName' >/dev/null 2>&1; then
-  pm2 restart '$processName' --update-env
-else
-  pm2 start npm --name '$processName' -- run '$startScript'
+  pm2 delete '$processName'
 fi
+pm2 start npm --name '$processName' --cwd '$backendRemotePath/app' -- run '$startScript'
 pm2 save
 
 $(($frontendDeployLines -join "`n"))
@@ -211,7 +214,8 @@ echo 'Deployment finished.'
 Write-Host "==> Running remote deploy commands"
 $remoteScriptPath = Join-Path $artifactsDir "remote-deploy.sh"
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-[System.IO.File]::WriteAllText($remoteScriptPath, $remoteScript, $utf8NoBom)
+$remoteScriptLf = $remoteScript -replace "`r`n", "`n"
+[System.IO.File]::WriteAllText($remoteScriptPath, $remoteScriptLf, $utf8NoBom)
 & scp @scpArgs $remoteScriptPath "$target`:$remoteTmp/remote-deploy.sh"
 & ssh @sshArgs $target "bash '$remoteTmp/remote-deploy.sh'"
 

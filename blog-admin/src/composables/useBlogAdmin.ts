@@ -3,6 +3,12 @@ import { ref } from 'vue';
 import { createPostApi, deletePostApi, getPostsApi, updatePostApi } from '@/api/modules/posts';
 import { getProfileApi, saveProfileApi } from '@/api/modules/profile';
 import {
+  createGoodSiteApi,
+  deleteGoodSiteApi,
+  getGoodSitesApi,
+  updateGoodSiteApi,
+} from '@/api/modules/goodSites';
+import {
   createProjectApi,
   deleteProjectApi,
   getProjectsApi,
@@ -10,6 +16,7 @@ import {
 } from '@/api/modules/projects';
 import type {
   AboutProfile,
+  AdminGoodSite,
   AdminPost,
   AdminProject,
   PostCategory,
@@ -18,6 +25,7 @@ import type {
 
 const posts = ref<AdminPost[]>([]);
 const projects = ref<AdminProject[]>([]);
+const goodSites = ref<AdminGoodSite[]>([]);
 const about = ref<AboutProfile>({
   name: '',
   intro: '',
@@ -66,13 +74,15 @@ const normalizeProject = (item: unknown): AdminProject => {
 };
 
 const loadAll = async () => {
-  const [postsRes, projectsRes, profileRes] = await Promise.all([
+  const [postsRes, projectsRes, profileRes, goodSitesRes] = await Promise.all([
     getPostsApi(),
     getProjectsApi(),
     getProfileApi(),
+    getGoodSitesApi(),
   ]);
   posts.value = postsRes.map(normalizePost);
   projects.value = projectsRes.map(normalizeProject);
+  goodSites.value = goodSitesRes;
   if (profileRes) {
     about.value = {
       name: String(profileRes.name ?? ''),
@@ -124,6 +134,20 @@ export const useBlogAdmin = () => {
     await loadAll();
   };
 
+  const upsertGoodSite = async (payload: Omit<AdminGoodSite, 'id'> & { id?: number }) => {
+    if (payload.id) {
+      await updateGoodSiteApi(payload.id, payload);
+    } else {
+      await createGoodSiteApi(payload);
+    }
+    await loadAll();
+  };
+
+  const deleteGoodSite = async (id: number) => {
+    await deleteGoodSiteApi(id);
+    await loadAll();
+  };
+
   const saveAbout = async (payload: AboutProfile) => {
     await saveProfileApi(payload);
     await loadAll();
@@ -137,6 +161,7 @@ export const useBlogAdmin = () => {
   return {
     posts,
     projects,
+    goodSites,
     about,
     init,
     loadAll,
@@ -146,6 +171,8 @@ export const useBlogAdmin = () => {
     deletePost,
     upsertProject,
     deleteProject,
+    upsertGoodSite,
+    deleteGoodSite,
     saveAbout,
   };
 };

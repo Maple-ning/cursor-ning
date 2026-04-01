@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getPostsApi } from '@/api/modules/posts';
 import { getProfileApi } from '@/api/modules/profile';
+import { getGoodSitesApi } from '@/api/modules/goodSites';
 import { getProjectsApi } from '@/api/modules/projects';
 import { useBlogAdmin } from '@/composables/useBlogAdmin';
 
@@ -22,6 +23,13 @@ vi.mock('@/api/modules/projects', () => ({
 vi.mock('@/api/modules/profile', () => ({
   getProfileApi: vi.fn(),
   saveProfileApi: vi.fn(),
+}));
+
+vi.mock('@/api/modules/goodSites', () => ({
+  createGoodSiteApi: vi.fn(),
+  deleteGoodSiteApi: vi.fn(),
+  getGoodSitesApi: vi.fn(),
+  updateGoodSiteApi: vi.fn(),
 }));
 
 describe('useBlogAdmin', () => {
@@ -57,6 +65,16 @@ describe('useBlogAdmin', () => {
       email: 'ning@example.com',
       github: 'https://github.com/ning',
     } as never);
+    vi.mocked(getGoodSitesApi).mockResolvedValue([
+      {
+        id: 1,
+        title: 'Example',
+        url: 'https://example.com',
+        description: '',
+        category: '工具',
+        sortOrder: 0,
+      },
+    ]);
 
     const admin = useBlogAdmin();
     await admin.init();
@@ -64,6 +82,8 @@ describe('useBlogAdmin', () => {
     expect(admin.posts.value[0]?.tags).toEqual(['vue']);
     expect(admin.projects.value[0]?.techStack).toEqual(['vue', 'ts']);
     expect(admin.about.value.name).toBe('Ning');
+    expect(admin.goodSites.value).toHaveLength(1);
+    expect(admin.goodSites.value[0]?.category).toBe('工具');
     expect(admin.postsByStatus('published')).toHaveLength(1);
   });
 });

@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
+import HomeWelcomeHero from '@/components/home/HomeWelcomeHero.vue';
 import { getPostsByCategory } from '@/services/posts';
 import { getProfile } from '@/services/profile';
 import { getProjects } from '@/services/projects';
@@ -31,18 +32,22 @@ onMounted(async () => {
 
 <template>
   <section class="grid gap-6">
-    <a-card class="home-section-card">
-      <h1 class="text-3xl font-bold text-gray-900">你好，我是 {{ profile?.name || 'Ning' }}</h1>
-      <p class="mt-3 text-gray-600">
-        {{ profile?.intro || '这里会持续更新我的技术分享、读书学习笔记，以及个人项目展示。' }}
-      </p>
-      <div class="mt-5 flex flex-wrap gap-3">
-        <RouterLink to="/posts/tech">
-          <a-button type="primary">看技术分享</a-button>
-        </RouterLink>
-        <RouterLink to="/projects">
-          <a-button>看项目展示</a-button>
-        </RouterLink>
+    <a-card class="home-section-card overflow-hidden" :body-style="{ padding: 0 }">
+      <HomeWelcomeHero />
+      <div
+        class="home-hero-body px-5 py-6 md:px-6 md:py-7 dark:border-t dark:border-slate-700 dark:!bg-gradient-to-b dark:!from-slate-900/95 dark:!to-gray-900"
+      >
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          你好，我是 {{ profile?.name || 'Ning' }}
+        </h1>
+        <p class="mt-3 text-gray-600 dark:text-gray-300">
+          {{ profile?.intro || '这里会持续更新我的技术分享、读书学习笔记，以及个人项目展示。' }}
+        </p>
+        <div class="mt-5 flex flex-wrap gap-3">
+          <RouterLink :to="{ name: 'projects' }">
+            <a-button ghost>看项目展示</a-button>
+          </RouterLink>
+        </div>
       </div>
     </a-card>
 
@@ -51,17 +56,20 @@ onMounted(async () => {
         <article
           v-for="post in latestTechPosts"
           :key="post.slug"
-          class="rounded-lg border border-gray-200 p-4"
+          class="blog-card-lift rounded-lg border border-gray-200 bg-white/80 p-4 dark:border-slate-600 dark:bg-slate-800/60"
         >
-          <RouterLink
-            :to="`/post/${post.slug}`"
-            class="text-lg font-semibold text-gray-900 hover:text-blue-600"
-          >
-            {{ post.title }}
-          </RouterLink>
-          <p class="mt-2 text-sm text-gray-500">{{ post.date }}</p>
-          <p class="mt-2 text-gray-700">{{ post.summary }}</p>
+          <div class="flex justify-between">
+            <RouterLink
+              :to="{ name: 'post-detail', params: { slug: post.slug } }"
+              class="text-lg font-semibold text-gray-900 hover:text-blue-600 dark:text-gray-100 dark:hover:text-blue-400"
+            >
+              {{ post.title }}
+            </RouterLink>
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ post.date }}</p>
+          </div>
+          <p class="mt-2 text-gray-700 dark:text-gray-300">{{ post.summary }}</p>
         </article>
+        <a-empty v-if="latestTechPosts.length === 0" description="暂无内容" />
       </div>
     </a-card>
 
@@ -70,25 +78,36 @@ onMounted(async () => {
         <article
           v-for="post in latestReviewPosts"
           :key="post.slug"
-          class="rounded-lg border border-gray-200 p-4"
+          class="blog-card-lift rounded-lg border border-gray-200 bg-white/80 p-4 dark:border-slate-600 dark:bg-slate-800/60"
         >
-          <RouterLink
-            :to="`/post/${post.slug}`"
-            class="text-lg font-semibold text-gray-900 hover:text-blue-600"
-          >
-            {{ post.title }}
-          </RouterLink>
-          <p class="mt-2 text-sm text-gray-500">{{ post.date }}</p>
-          <p class="mt-2 text-gray-700">{{ post.summary }}</p>
+          <div class="flex justify-between">
+            <RouterLink
+              :to="{ name: 'post-detail', params: { slug: post.slug } }"
+              class="text-lg font-semibold text-gray-900 hover:text-blue-600 dark:text-gray-100 dark:hover:text-blue-400"
+            >
+              {{ post.title }}
+            </RouterLink>
+            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ post.date }}</p>
+          </div>
+
+          <p class="mt-2 text-gray-700 dark:text-gray-300">{{ post.summary }}</p>
         </article>
+        <a-empty v-if="latestReviewPosts.length === 0" description="暂无内容" />
       </div>
     </a-card>
 
-    <a-card title="精选项目" class="home-section-card">
+    <a-card title="我的项目" class="home-section-card">
       <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <a-card v-for="project in featuredProjects" :key="project.name" size="small" class="h-full">
-          <h3 class="text-base font-semibold text-gray-900">{{ project.name }}</h3>
-          <p class="mt-2 text-sm text-gray-600">{{ project.description }}</p>
+        <a-card
+          v-for="project in featuredProjects"
+          :key="project.name"
+          size="small"
+          class="blog-card-lift h-full"
+        >
+          <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">
+            {{ project.name }}
+          </h3>
+          <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">{{ project.description }}</p>
           <div class="mt-3 flex flex-wrap gap-2">
             <a-tag v-for="tech in project.techStack" :key="tech" color="blue">
               {{ tech }}
@@ -96,6 +115,14 @@ onMounted(async () => {
           </div>
         </a-card>
       </div>
+      <a-empty v-if="featuredProjects.length === 0" description="暂无内容" />
     </a-card>
   </section>
 </template>
+
+<style scoped>
+.home-hero-body {
+  border-top: 1px solid rgba(226, 232, 240, 0.95);
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.98) 0%, #fff 100%);
+}
+</style>

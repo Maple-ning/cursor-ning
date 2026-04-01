@@ -50,19 +50,23 @@ onMounted(async () => {
       </div>
     </a-card>
 
-    <a-card v-for="post in filteredPosts" :key="post.slug" class="rounded-xl">
-      <RouterLink
-        :to="`/post/${post.slug}`"
-        class="text-xl font-semibold text-gray-900 hover:text-blue-600 dark:text-gray-100"
-      >
-        {{ post.title }}
-      </RouterLink>
-      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ post.date }}</p>
-      <p class="mt-3 text-gray-700 dark:text-gray-300">{{ post.summary }}</p>
-      <div class="mt-3 flex flex-wrap gap-2">
-        <a-tag v-for="tag in post.tags" :key="tag">{{ tag }}</a-tag>
-      </div>
-    </a-card>
+    <div class="mt-5 flex flex-col gap-4">
+      <a-card v-for="post in filteredPosts" :key="post.slug" class="blog-card-lift rounded-xl">
+        <div class="flex justify-between">
+          <RouterLink
+            :to="{ name: 'post-detail', params: { slug: post.slug } }"
+            class="text-xl font-semibold text-gray-900 hover:text-blue-600 dark:text-gray-100 dark:hover:text-blue-400"
+          >
+            {{ post.title }}
+          </RouterLink>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ post.date }}</p>
+        </div>
+        <p class="mt-3 text-gray-700 dark:text-gray-300">{{ post.summary }}</p>
+        <div class="mt-3 flex flex-wrap gap-2">
+          <a-tag v-for="tag in post.tags" :key="tag">{{ tag }}</a-tag>
+        </div>
+      </a-card>
+    </div>
 
     <a-empty v-if="filteredPosts.length === 0" description="没有匹配的文章" />
   </section>
