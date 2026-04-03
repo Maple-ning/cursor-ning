@@ -1,12 +1,132 @@
 @import 'tailwindcss';
 @custom-variant dark (&:where(.dark, .dark *));
 
+:root {
+  --admin-bg: #f1f5f9;
+  --admin-surface: #ffffff;
+  --admin-border: #e2e8f0;
+  --admin-text: #0f172a;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
 body {
-  min-height: 100vh;
-  overflow-y: scroll;
+  min-height: 100%;
+  overflow-y: hidden;
   overflow-x: hidden;
-  scrollbar-gutter: stable;
-  background: #f9fafb;
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(59, 130, 246, 0.08), transparent 50%),
+    var(--admin-bg);
+  color: var(--admin-text);
+  font-family:
+    'Inter',
+    'PingFang SC',
+    'Microsoft YaHei UI',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+}
+
+.ant-card {
+  border-color: var(--admin-border) !important;
+  border-radius: 14px !important;
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 0.03),
+    0 10px 20px -18px rgb(15 23 42 / 0.25);
+}
+
+.ant-card .ant-card-head {
+  border-bottom-color: #eef2f7 !important;
+}
+
+.ant-btn {
+  border-radius: 9px !important;
+}
+
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-input-number,
+.ant-select-selector,
+.ant-picker {
+  border-radius: 9px !important;
+}
+
+.ant-modal .ant-modal-content {
+  border-radius: 14px !important;
+}
+
+.ant-modal .ant-modal-header {
+  border-bottom: 1px solid #eef2f7;
+  margin-bottom: 12px;
+}
+
+.ant-modal .ant-modal-footer {
+  border-top: 1px solid #eef2f7;
+  padding-top: 12px;
+}
+
+.admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.admin-list-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fff;
+  padding: 14px 16px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-list-item:hover {
+  border-color: #bfdbfe;
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 0.03),
+    0 10px 24px -22px rgb(59 130 246 / 0.45);
+  transform: translateY(-1px);
+}
+
+.admin-list-title {
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.admin-list-sub {
+  margin-top: 4px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.admin-list-desc {
+  margin-top: 8px;
+  color: #334155;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.admin-list-top {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.admin-list-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
 }
 
 /* Markdown 预览列表样式（后台编辑器与预览区） */

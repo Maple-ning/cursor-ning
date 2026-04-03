@@ -23,7 +23,7 @@ onMounted(() => {
         枫叶小站
       </p>
       <h2 class="home-welcome__title">欢迎来到枫叶小站</h2>
-      <p class="home-welcome__tagline">技术分享 · 读书笔记 · 项目展示</p>
+      <p class="home-welcome__tagline">学习记录 · 学习笔记 · 项目展示</p>
     </div>
 
     <div class="home-welcome__particles" aria-hidden="true">

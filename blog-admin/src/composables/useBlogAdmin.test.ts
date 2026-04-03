@@ -30,6 +30,7 @@ vi.mock('@/api/modules/goodSites', () => ({
   deleteGoodSiteApi: vi.fn(),
   getGoodSitesApi: vi.fn(),
   updateGoodSiteApi: vi.fn(),
+  updateGoodSiteCategoryOrderApi: vi.fn(),
 }));
 
 describe('useBlogAdmin', () => {
@@ -65,16 +66,19 @@ describe('useBlogAdmin', () => {
       email: 'ning@example.com',
       github: 'https://github.com/ning',
     } as never);
-    vi.mocked(getGoodSitesApi).mockResolvedValue([
-      {
-        id: 1,
-        title: 'Example',
-        url: 'https://example.com',
-        description: '',
-        category: '工具',
-        sortOrder: 0,
-      },
-    ]);
+    vi.mocked(getGoodSitesApi).mockResolvedValue({
+      items: [
+        {
+          id: 1,
+          title: 'Example',
+          url: 'https://example.com',
+          description: '',
+          category: '工具',
+          sortOrder: 0,
+        },
+      ],
+      categoryOrder: ['工具'],
+    });
 
     const admin = useBlogAdmin();
     await admin.init();
@@ -84,6 +88,7 @@ describe('useBlogAdmin', () => {
     expect(admin.about.value.name).toBe('Ning');
     expect(admin.goodSites.value).toHaveLength(1);
     expect(admin.goodSites.value[0]?.category).toBe('工具');
+    expect(admin.goodSiteCategoryOrder.value).toEqual(['工具']);
     expect(admin.postsByStatus('published')).toHaveLength(1);
   });
 });

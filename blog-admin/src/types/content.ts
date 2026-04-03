@@ -17,12 +17,15 @@ export interface AdminProject {
   name: string;
   description: string;
   url: string;
+  sourceCodeUrl: string;
   techStack: string[];
 }
 
 export interface AboutProfile {
   name: string;
+  tagline: string;
   intro: string;
+  focusPoints: string[];
   email: string;
   github: string;
 }

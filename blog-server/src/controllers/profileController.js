@@ -1,33 +1,48 @@
 const pool = require('../config/db')
 
+const toJsonArray = (value) => {
+  if (Array.isArray(value)) return value.map((item) => String(item))
+  return []
+}
+
 const getProfile = async (_req, res) => {
   try {
     const [rows] = await pool.query('SELECT * FROM profile LIMIT 1')
     if (rows.length === 0) return res.json(null)
     res.json(rows[0])
   } catch (error) {
+    console.error('[profile] getProfile failed:', error)
     res.status(500).json({ message: '获取关于我失败', error: error.message })
   }
 }
 
 const upsertProfile = async (req, res) => {
-  const { name, intro, email, github } = req.body
+  const { name, tagline = '', intro, focusPoints = [], email, github } = req.body
   if (!name || !intro) return res.status(400).json({ message: '缺少必要字段' })
   try {
     const [rows] = await pool.query('SELECT id FROM profile LIMIT 1')
     if (rows.length === 0) {
       await pool.query(
-        'INSERT INTO profile (name, intro, email, github) VALUES (?, ?, ?, ?)',
-        [name, intro, email || '', github || ''],
+        'INSERT INTO profile (name, tagline, intro, focus_points, email, github) VALUES (?, ?, ?, ?, ?, ?)',
+        [name, tagline || '', intro, JSON.stringify(toJsonArray(focusPoints)), email || '', github || ''],
       )
     } else {
       await pool.query(
-        'UPDATE profile SET name = ?, intro = ?, email = ?, github = ? WHERE id = ?',
-        [name, intro, email || '', github || '', rows[0].id],
+        'UPDATE profile SET name = ?, tagline = ?, intro = ?, focus_points = ?, email = ?, github = ? WHERE id = ?',
+        [
+          name,
+          tagline || '',
+          intro,
+          JSON.stringify(toJsonArray(focusPoints)),
+          email || '',
+          github || '',
+          rows[0].id,
+        ],
       )
     }
     res.json({ message: '保存成功' })
   } catch (error) {
+    console.error('[profile] upsertProfile failed:', error)
     res.status(500).json({ message: '保存关于我失败', error: error.message })
   }
 }

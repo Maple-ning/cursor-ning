@@ -53,6 +53,24 @@ sql/add-post-status.sql
 sql/add-good-sites.sql
 ```
 
+若需**好站分类排序**（`good_site_category_order` 表），在已有库上再执行：
+
+```bash
+sql/add-good-site-category-order.sql
+```
+
+若需给 `projects` 增加源码地址字段（`source_code_url`），在已有库上再执行：
+
+```bash
+sql/add-project-source-code-url.sql
+```
+
+若需给 `profile` 增加扩展字段（`tagline`、`focus_points`），在已有库上再执行：
+
+```bash
+sql/add-profile-extended-fields.sql
+```
+
 ## 4. 启动服务
 
 ```bash
@@ -76,3 +94,4 @@ npm run dev
 - `POST /api/good-sites`（需登录）
 - `PUT /api/good-sites/:id`（需登录）
 - `DELETE /api/good-sites/:id`（需登录）
+- `PUT /api/profile/good-sites/category-order`（需登录，body: `{ order: string[] }`）

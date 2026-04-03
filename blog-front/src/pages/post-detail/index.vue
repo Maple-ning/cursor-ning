@@ -17,6 +17,10 @@ type TocItem = {
 
 const tocItems = ref<TocItem[]>([]);
 const activeTocId = ref('');
+const tocScrollContainer = ref<HTMLElement | null>(null);
+
+const backRouteName = computed(() => (post.value?.category === 'review' ? 'review-posts' : 'tech-posts'));
+const categoryLabel = computed(() => (post.value?.category === 'review' ? '学习笔记' : '学习记录'));
 
 const slugify = (text: string) =>
   text
@@ -65,6 +69,9 @@ const loadPost = async () => {
   post.value = await getPostBySlug(slug);
 };
 
+const resolveScrollContainer = () =>
+  document.querySelector<HTMLElement>('[data-app-scroll-container="true"]');
+
 const updateActiveToc = () => {
   const headings = Array.from(
     document.querySelectorAll('.markdown-body h1[id], .markdown-body h2[id], .markdown-body h3[id]')
@@ -73,14 +80,15 @@ const updateActiveToc = () => {
     activeTocId.value = '';
     return;
   }
-  const checkpoint = window.scrollY + 140;
+  const container = tocScrollContainer.value;
+  const checkpoint = container ? container.getBoundingClientRect().top + 110 : window.scrollY + 140;
   let current: HTMLHeadingElement | null = headings[0] ?? null;
   if (!current) {
     activeTocId.value = '';
     return;
   }
   for (const heading of headings) {
-    const top = heading.getBoundingClientRect().top + window.scrollY;
+    const top = container ? heading.getBoundingClientRect().top : heading.getBoundingClientRect().top + window.scrollY;
     if (top <= checkpoint) {
       current = heading;
     } else {
@@ -100,7 +108,12 @@ const onScrollOrResize = () => {
 };
 
 const bindTocSpy = () => {
-  window.addEventListener('scroll', onScrollOrResize, { passive: true });
+  tocScrollContainer.value = resolveScrollContainer();
+  if (tocScrollContainer.value) {
+    tocScrollContainer.value.addEventListener('scroll', onScrollOrResize, { passive: true });
+  } else {
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+  }
   window.addEventListener('resize', onScrollOrResize, { passive: true });
   onScrollOrResize();
 };
@@ -110,8 +123,28 @@ const unbindTocSpy = () => {
     cancelAnimationFrame(rafId);
     rafId = 0;
   }
-  window.removeEventListener('scroll', onScrollOrResize);
+  if (tocScrollContainer.value) {
+    tocScrollContainer.value.removeEventListener('scroll', onScrollOrResize);
+    tocScrollContainer.value = null;
+  } else {
+    window.removeEventListener('scroll', onScrollOrResize);
+  }
   window.removeEventListener('resize', onScrollOrResize);
+};
+
+const handleTocClick = (id: string) => {
+  const heading = document.getElementById(id);
+  if (!heading) return;
+  const container = tocScrollContainer.value ?? resolveScrollContainer();
+  if (container) {
+    const cRect = container.getBoundingClientRect();
+    const hRect = heading.getBoundingClientRect();
+    const targetTop = container.scrollTop + (hRect.top - cRect.top) - 20;
+    container.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+  } else {
+    heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  activeTocId.value = id;
 };
 
 onMounted(loadPost);
@@ -134,9 +167,16 @@ onBeforeUnmount(unbindTocSpy);
 
 <template>
   <section v-if="post" class="space-y-4">
-    <RouterLink :to="{ name: 'home' }" class="text-sm text-blue-600 hover:underline dark:text-blue-400">
-      返回首页
-    </RouterLink>
+    <div class="text-sm text-slate-500 dark:text-slate-400">
+      <RouterLink
+        :to="{ name: backRouteName }"
+        class="hover:text-blue-600 dark:hover:text-blue-400"
+      >
+        {{ categoryLabel }}
+      </RouterLink>
+      <span class="mx-2">/</span>
+      <span class="text-slate-500 dark:text-slate-400">文章</span>
+    </div>
     <div class="grid gap-4 xl:grid-cols-[minmax(0,1fr)_260px] xl:items-start">
       <a-card>
         <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ post.title }}</h1>
@@ -149,7 +189,7 @@ onBeforeUnmount(unbindTocSpy);
 
       <div
         v-if="tocItems.length > 0"
-        class="hidden xl:block xl:sticky xl:top-24 xl:self-start xl:max-h-[calc(100vh-7rem)] xl:overflow-auto"
+        class="hidden xl:block xl:sticky xl:top-4 xl:self-start xl:max-h-[calc(100vh-7rem)] xl:overflow-auto"
       >
         <a-card title="目录">
           <div class="post-toc">
@@ -158,6 +198,7 @@ onBeforeUnmount(unbindTocSpy);
               :key="item.id"
               :href="`#${item.id}`"
               class="post-toc-link"
+              @click.prevent="handleTocClick(item.id)"
               :class="{
                 'post-toc-l1': item.level === 1,
                 'post-toc-l2': item.level === 2,

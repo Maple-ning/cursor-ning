@@ -21,13 +21,13 @@ export const routes: RouteRecordRaw[] = [
         path: 'posts/tech',
         name: 'manage-tech-posts',
         component: () => import('@/pages/manage-tech-posts/index.vue'),
-        meta: { title: '技术分享管理' },
+        meta: { title: '学习记录管理' },
       },
       {
         path: 'posts/review',
         name: 'manage-review-posts',
         component: () => import('@/pages/manage-review-posts/index.vue'),
-        meta: { title: '读后感管理' },
+        meta: { title: '学习笔记' },
       },
       {
         path: 'projects',

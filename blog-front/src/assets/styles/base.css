@@ -1,4 +1,22 @@
 /* color palette from <https://github.com/vuejs/theme> */
+@font-face {
+  font-family: 'MapleNumeric';
+  src:
+    local('DIN Alternate'),
+    local('Bahnschrift'),
+    local('Segoe UI Variable Display'),
+    local('Inter');
+  unicode-range:
+    U+0030-0039,
+    U+0025,
+    U+002B,
+    U+002D,
+    U+002E,
+    U+002C,
+    U+003A;
+  font-display: swap;
+}
+
 :root {
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
@@ -32,6 +50,30 @@
 
   --color-heading: var(--vt-c-text-light-1);
   --color-text: var(--vt-c-text-light-1);
+  --font-family-sans:
+    'MapleNumeric',
+    'SF Pro SC',
+    'PingFang SC',
+    'HarmonyOS Sans SC',
+    'MiSans',
+    'Noto Sans SC',
+    'Microsoft YaHei UI',
+    'Segoe UI',
+    Inter,
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  --font-family-mono:
+    'JetBrains Mono',
+    'Cascadia Code',
+    'SF Mono',
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    'Courier New',
+    monospace;
 
   --section-gap: 160px;
 }
@@ -55,12 +97,15 @@
 *::after {
   box-sizing: border-box;
   margin: 0;
-  font-weight: normal;
+  font-weight: inherit;
 }
 
 html {
   height: 100%;
   overflow-y: auto;
+  font-family: var(--font-family-sans);
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -73,22 +118,32 @@ body {
   transition:
     color 0.5s,
     background-color 0.5s;
-  line-height: 1.6;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
+  line-height: 1.68;
+  font-family: var(--font-family-sans);
   font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  font-variant-numeric: lining-nums tabular-nums;
   text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  font-kerning: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  letter-spacing: 0.012em;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-family-mono);
 }

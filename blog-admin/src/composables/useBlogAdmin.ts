@@ -7,6 +7,7 @@ import {
   deleteGoodSiteApi,
   getGoodSitesApi,
   updateGoodSiteApi,
+  updateGoodSiteCategoryOrderApi,
 } from '@/api/modules/goodSites';
 import {
   createProjectApi,
@@ -26,9 +27,13 @@ import type {
 const posts = ref<AdminPost[]>([]);
 const projects = ref<AdminProject[]>([]);
 const goodSites = ref<AdminGoodSite[]>([]);
+/** 分类展示顺序（与前台下拉、分组一致） */
+const goodSiteCategoryOrder = ref<string[]>([]);
 const about = ref<AboutProfile>({
   name: '',
+  tagline: '',
   intro: '',
+  focusPoints: [],
   email: '',
   github: '',
 });
@@ -69,6 +74,7 @@ const normalizeProject = (item: unknown): AdminProject => {
     name: String(o.name ?? ''),
     description: String(o.description ?? ''),
     url: String(o.url ?? ''),
+    sourceCodeUrl: String(o.source_code_url ?? o.sourceCodeUrl ?? ''),
     techStack: toStringArray(o.tech_stack),
   };
 };
@@ -82,13 +88,19 @@ const loadAll = async () => {
   ]);
   posts.value = postsRes.map(normalizePost);
   projects.value = projectsRes.map(normalizeProject);
-  goodSites.value = goodSitesRes;
+  goodSites.value = Array.isArray(goodSitesRes.items) ? goodSitesRes.items : [];
+  goodSiteCategoryOrder.value = Array.isArray(goodSitesRes.categoryOrder)
+    ? goodSitesRes.categoryOrder
+    : [];
   if (profileRes) {
+    const p = profileRes as unknown as Record<string, unknown>;
     about.value = {
-      name: String(profileRes.name ?? ''),
-      intro: String(profileRes.intro ?? ''),
-      email: String(profileRes.email ?? ''),
-      github: String(profileRes.github ?? ''),
+      name: String(p.name ?? ''),
+      tagline: String(p.tagline ?? ''),
+      intro: String(p.intro ?? ''),
+      focusPoints: toStringArray(p.focus_points ?? p.focusPoints),
+      email: String(p.email ?? ''),
+      github: String(p.github ?? ''),
     };
   }
 };
@@ -148,6 +160,11 @@ export const useBlogAdmin = () => {
     await loadAll();
   };
 
+  const saveGoodSiteCategoryOrder = async (order: string[]) => {
+    await updateGoodSiteCategoryOrderApi(order);
+    await loadAll();
+  };
+
   const saveAbout = async (payload: AboutProfile) => {
     await saveProfileApi(payload);
     await loadAll();
@@ -162,6 +179,7 @@ export const useBlogAdmin = () => {
     posts,
     projects,
     goodSites,
+    goodSiteCategoryOrder,
     about,
     init,
     loadAll,
@@ -173,6 +191,7 @@ export const useBlogAdmin = () => {
     deleteProject,
     upsertGoodSite,
     deleteGoodSite,
+    saveGoodSiteCategoryOrder,
     saveAbout,
   };
 };

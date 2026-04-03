@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 
 import { getPostsByCategory } from '@/services/posts';
 
 const keyword = ref('');
 const activeTag = ref<string | undefined>(undefined);
 const reviewPosts = ref<Awaited<ReturnType<typeof getPostsByCategory>>>([]);
+const router = useRouter();
 
 const allTags = computed(() => {
   const tags = new Set<string>();
@@ -19,11 +20,7 @@ const allTags = computed(() => {
 const filteredPosts = computed(() => {
   const search = keyword.value.trim().toLowerCase();
   return reviewPosts.value.filter((post) => {
-    const inKeyword =
-      search.length === 0 ||
-      post.title.toLowerCase().includes(search) ||
-      post.summary.toLowerCase().includes(search) ||
-      post.tags.some((tag) => tag.toLowerCase().includes(search));
+    const inKeyword = search.length === 0 || post.title.toLowerCase().includes(search);
     const inTag = !activeTag.value || post.tags.includes(activeTag.value);
     return inKeyword && inTag;
   });
@@ -32,26 +29,39 @@ const filteredPosts = computed(() => {
 onMounted(async () => {
   reviewPosts.value = await getPostsByCategory('review');
 });
+
+const goDetail = (slug: string) => {
+  void router.push({ name: 'post-detail', params: { slug } });
+};
 </script>
 
 <template>
   <section class="space-y-4">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">学习读后感</h1>
-    <p class="text-gray-600 dark:text-gray-300">整理我的读书笔记、课程总结和阶段性反思。</p>
-
-    <a-card>
-      <div class="grid gap-3 md:grid-cols-[1fr_auto]">
-        <a-input v-model:value="keyword" placeholder="搜索标题、摘要、标签" allow-clear />
-        <a-select v-model:value="activeTag" class="min-w-52" allow-clear placeholder="按标签筛选">
-          <a-select-option v-for="tag in allTags" :key="tag" :value="tag">
-            {{ tag }}
-          </a-select-option>
-        </a-select>
-      </div>
-    </a-card>
+    <div
+      class="sticky top-0 z-30 border-b border-slate-200/70 bg-slate-100/95 pb-2 pt-1 dark:border-slate-700/70 dark:bg-gray-950/95"
+    >
+      <a-card>
+        <div class="grid gap-3 md:grid-cols-[1fr_auto]">
+          <a-input v-model:value="keyword" placeholder="搜索标题" allow-clear />
+          <a-select v-model:value="activeTag" class="min-w-52" allow-clear placeholder="按标签筛选">
+            <a-select-option v-for="tag in allTags" :key="tag" :value="tag">
+              {{ tag }}
+            </a-select-option>
+          </a-select>
+        </div>
+      </a-card>
+    </div>
 
     <div class="mt-5 flex flex-col gap-4">
-      <a-card v-for="post in filteredPosts" :key="post.slug" class="blog-card-lift rounded-xl">
+      <a-card
+        v-for="post in filteredPosts"
+        :key="post.slug"
+        class="blog-card-lift cursor-pointer rounded-xl transition hover:ring-1 hover:ring-blue-200"
+        tabindex="0"
+        role="button"
+        @click="goDetail(post.slug)"
+        @keydown.enter.prevent="goDetail(post.slug)"
+      >
         <div class="flex justify-between">
           <RouterLink
             :to="{ name: 'post-detail', params: { slug: post.slug } }"

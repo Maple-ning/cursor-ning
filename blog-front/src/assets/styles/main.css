@@ -63,6 +63,42 @@ body {
   background: #1e293b !important;
 }
 
+/* About 页面卡片暗黑模式强制覆盖（避免被 Ant 默认白底覆盖） */
+.dark .about-info-card.ant-card,
+html.dark .about-info-card.ant-card,
+body.dark .about-info-card.ant-card {
+  background: #020617 !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+.dark .about-info-card.ant-card .ant-card-head,
+.dark .about-info-card.ant-card .ant-card-body,
+html.dark .about-info-card.ant-card .ant-card-head,
+html.dark .about-info-card.ant-card .ant-card-body,
+body.dark .about-info-card.ant-card .ant-card-head,
+body.dark .about-info-card.ant-card .ant-card-body {
+  background: #020617 !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+.dark .about-info-card.ant-card .ant-card-head-title,
+html.dark .about-info-card.ant-card .ant-card-head-title,
+body.dark .about-info-card.ant-card .ant-card-head-title {
+  color: #f8fafc !important;
+}
+
+/* About 顶部 hero 在暗黑模式下强制黑底（覆盖组件内浅色默认背景） */
+.dark .about-hero,
+html.dark .about-hero,
+body.dark .about-hero {
+  background:
+    radial-gradient(900px 300px at 10% -15%, rgb(37 99 235 / 0.16), transparent 55%),
+    linear-gradient(180deg, #111827 0%, #020617 100%) !important;
+  border-color: #334155 !important;
+}
+
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3,

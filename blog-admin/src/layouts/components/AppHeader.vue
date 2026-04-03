@@ -19,9 +19,12 @@ defineEmits<{
 </script>
 
 <template>
-  <header class="sticky top-0 z-20 border-b border-gray-200 bg-white/90 backdrop-blur">
-    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-      <h1 class="text-lg font-semibold text-gray-900">枫叶小站后台</h1>
+  <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <div class="mx-auto flex max-w-[92rem] items-center justify-between px-4 py-3 sm:px-6 md:px-8">
+      <div class="min-w-0">
+        <p class="truncate text-base font-semibold text-slate-900">枫叶小站后台</p>
+      </div>
+
       <div class="flex items-center gap-2">
         <a-button
           class="md:!hidden"
@@ -51,8 +54,9 @@ defineEmits<{
             </svg>
           </template>
         </a-button>
+
         <a-menu
-          class="hidden min-w-[520px] bg-transparent md:block"
+          class="admin-top-nav hidden min-w-[560px] bg-transparent md:block"
           mode="horizontal"
           :selected-keys="[activeNavKey]"
           @click="$emit('navigate', String($event.key))"
@@ -61,10 +65,22 @@ defineEmits<{
             {{ item.label }}
           </a-menu-item>
         </a-menu>
-        <a-button size="small" @click="$emit('logout')">登出</a-button>
+
+        <a-tooltip title="退出登录">
+          <a-button size="small" type="text" aria-label="退出登录" @click="$emit('logout')">
+            <template #icon>
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" stroke-width="2" stroke-linecap="round" />
+                <path d="M10 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M15 12H3" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </template>
+          </a-button>
+        </a-tooltip>
       </div>
     </div>
   </header>
+
   <a-drawer
     :open="mobileMenuOpen"
     placement="right"
@@ -73,28 +89,49 @@ defineEmits<{
     title="导航"
     @update:open="$emit('updateMobileMenu', $event)"
   >
-    <a-menu mode="inline" :selected-keys="[activeNavKey]" @click="$emit('navigate', String($event.key))">
-      <a-menu-item v-for="item in navItems" :key="item.to">
+    <div class="space-y-2">
+      <button
+        v-for="item in navItems"
+        :key="item.to"
+        type="button"
+        class="w-full rounded-lg px-3 py-2.5 text-left text-sm transition"
+        :class="
+          activeNavKey === item.to
+            ? 'bg-blue-50 text-blue-700 ring-1 ring-blue-200'
+            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+        "
+        @click="$emit('navigate', item.to)"
+      >
         {{ item.label }}
-      </a-menu-item>
-    </a-menu>
+      </button>
+    </div>
+    <a-button class="mt-4" block @click="$emit('logout')">
+      <template #icon>
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" stroke-width="2" stroke-linecap="round" />
+          <path d="M10 17l5-5-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M15 12H3" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </template>
+      退出登录
+    </a-button>
   </a-drawer>
 </template>
 
 <style scoped>
-:deep(.ant-menu-overflow) {
+.admin-top-nav:deep(.ant-menu-overflow) {
   border-bottom: 0 !important;
 }
 
-:deep(.ant-menu-horizontal > .ant-menu-item),
-:deep(.ant-menu-horizontal > .ant-menu-submenu) {
+.admin-top-nav:deep(.ant-menu-horizontal > .ant-menu-item),
+.admin-top-nav:deep(.ant-menu-horizontal > .ant-menu-submenu) {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
   border-bottom: 0 !important;
 }
 
-:deep(.ant-menu-horizontal > .ant-menu-item-selected) {
-  background: rgba(59, 130, 246, 0.12) !important;
-  border-radius: 6px;
+.admin-top-nav:deep(.ant-menu-horizontal > .ant-menu-item-selected) {
+  border-radius: 8px;
+  background: rgb(239 246 255) !important;
 }
 </style>

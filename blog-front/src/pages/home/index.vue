@@ -10,7 +10,7 @@ import { getProjects } from '@/services/projects';
 const techPosts = ref<Awaited<ReturnType<typeof getPostsByCategory>>>([]);
 const reviewPosts = ref<Awaited<ReturnType<typeof getPostsByCategory>>>([]);
 const projects = ref<Awaited<ReturnType<typeof getProjects>>>([]);
-const profile = ref<{ name: string; intro: string } | null>(null);
+const profile = ref<Awaited<ReturnType<typeof getProfile>>>(null);
 
 const latestTechPosts = computed(() => techPosts.value.slice(0, 3));
 const latestReviewPosts = computed(() => reviewPosts.value.slice(0, 2));
@@ -26,7 +26,7 @@ onMounted(async () => {
   techPosts.value = tech;
   reviewPosts.value = review;
   projects.value = projectList;
-  profile.value = profileInfo ? { name: profileInfo.name, intro: profileInfo.intro } : null;
+  profile.value = profileInfo;
 });
 </script>
 
@@ -38,11 +38,9 @@ onMounted(async () => {
         class="home-hero-body px-5 py-6 md:px-6 md:py-7 dark:border-t dark:border-slate-700 dark:!bg-gradient-to-b dark:!from-slate-900/95 dark:!to-gray-900"
       >
         <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">
-          你好，我是 {{ profile?.name || 'Ning' }}
+          {{ profile?.name ? `你好，我是 ${profile.name}` : '你好' }}
         </h1>
-        <p class="mt-3 text-gray-600 dark:text-gray-300">
-          {{ profile?.intro || '这里会持续更新我的技术分享、读书学习笔记，以及个人项目展示。' }}
-        </p>
+        <p v-if="profile?.intro" class="mt-3 text-gray-600 dark:text-gray-300">{{ profile.intro }}</p>
         <div class="mt-5 flex flex-wrap gap-3">
           <RouterLink :to="{ name: 'projects' }">
             <a-button ghost>看项目展示</a-button>
@@ -51,7 +49,7 @@ onMounted(async () => {
       </div>
     </a-card>
 
-    <a-card title="最新技术分享" class="home-section-card">
+    <a-card title="最新学习记录" class="home-section-card">
       <div class="space-y-4">
         <article
           v-for="post in latestTechPosts"
@@ -73,7 +71,7 @@ onMounted(async () => {
       </div>
     </a-card>
 
-    <a-card title="最近读后感" class="home-section-card">
+    <a-card title="最新学习笔记" class="home-section-card">
       <div class="space-y-4">
         <article
           v-for="post in latestReviewPosts"

@@ -70,32 +70,40 @@ onMounted(init);
 
 <template>
   <section>
-    <a-card title="读后感列表">
+    <a-card title="学习笔记列表">
       <template #extra>
-        <a-button type="primary" @click="openCreate">新增内容</a-button>
+        <a-button type="primary" @click="openCreate">新增学习笔记</a-button>
       </template>
-      <div class="flex flex-col gap-4">
-        <a-card v-for="item in posts" :key="item.id" size="small">
-          <p class="font-semibold text-gray-900">{{ item.title }}</p>
-          <p class="mt-1 text-sm text-gray-500">{{ item.date }}</p>
-          <a-tag :color="item.status === 'published' ? 'green' : 'orange'">
-            {{ item.status === 'published' ? '已发布' : '草稿' }}
-          </a-tag>
-          <p class="mt-2 text-sm text-gray-700">{{ item.summary }}</p>
-          <div class="mt-3 flex gap-2">
-            <a-button size="small" @click="editItem(item.id)">编辑</a-button>
+      <div class="admin-list">
+        <article v-for="item in posts" :key="item.id" class="admin-list-item">
+          <div class="admin-list-top">
+            <div>
+              <p class="admin-list-title">{{ item.title }}</p>
+              <p class="admin-list-sub">发布日期：{{ item.date }}</p>
+            </div>
+            <a-tag :color="item.status === 'published' ? 'green' : 'orange'">
+              {{ item.status === 'published' ? '已发布' : '草稿' }}
+            </a-tag>
+          </div>
+          <p class="admin-list-desc">{{ item.summary }}</p>
+          <div v-if="item.tags.length > 0" class="mt-2 flex flex-wrap gap-1.5">
+            <a-tag v-for="tag in item.tags" :key="tag" color="purple">{{ tag }}</a-tag>
+          </div>
+          <div class="-mx-4 my-3 border-t border-dashed border-slate-200" />
+          <div class="mt-1 flex gap-3">
+            <a-button @click="editItem(item.id)">编辑</a-button>
             <a-popconfirm title="确认删除吗？" @confirm="deletePost(item.id)">
-              <a-button danger size="small">删除</a-button>
+              <a-button danger>删除</a-button>
             </a-popconfirm>
           </div>
-        </a-card>
+        </article>
       </div>
       <a-empty v-if="posts.length === 0" description="暂无内容" />
     </a-card>
 
     <a-modal
       v-model:open="modalOpen"
-      :title="form.id ? '编辑读后感' : '新增读后感'"
+      :title="form.id ? '编辑学习笔记' : '新增学习笔记'"
       ok-text="保存"
       cancel-text="取消"
       width="min(1180px, 96vw)"

@@ -11,7 +11,9 @@ export interface PostApiItem {
 
 export interface ProfileApiItem {
   name: string;
+  tagline?: string;
   intro: string;
+  focus_points?: unknown;
   email: string;
   github: string;
 }
@@ -22,6 +24,7 @@ export interface ProjectApiItem {
   description: string;
   tech_stack: unknown;
   url: string;
+  source_code_url?: string | null;
 }
 
 export interface GoodSiteApiItem {

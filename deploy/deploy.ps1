@@ -184,7 +184,6 @@ if ! command -v pm2 >/dev/null 2>&1; then
 fi
 
 mkdir -p '$backendRemotePath/app'
-mkdir -p '$backendRemotePath/shared/chat-uploads'
 rm -rf '$backendRemotePath/app'/*
 tar -xzf '$remoteTmp/backend.tar.gz' -C '$backendRemotePath/app'
 

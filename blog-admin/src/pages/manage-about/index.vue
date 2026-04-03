@@ -14,7 +14,9 @@ const githubPreviewHref = (raw: string) => {
 
 const form = reactive({
   name: about.value.name,
+  tagline: about.value.tagline,
   intro: about.value.intro,
+  focusPointsText: about.value.focusPoints.join('\n'),
   email: about.value.email,
   github: about.value.github,
 });
@@ -22,7 +24,12 @@ const form = reactive({
 const submit = async () => {
   await saveAbout({
     name: form.name,
+    tagline: form.tagline,
     intro: form.intro,
+    focusPoints: form.focusPointsText
+      .split('\n')
+      .map((item) => item.trim())
+      .filter(Boolean),
     email: form.email,
     github: form.github,
   });
@@ -32,7 +39,9 @@ watch(
   about,
   (value) => {
     form.name = value.name;
+    form.tagline = value.tagline;
     form.intro = value.intro;
+    form.focusPointsText = value.focusPoints.join('\n');
     form.email = value.email;
     form.github = value.github;
   },
@@ -47,16 +56,22 @@ onMounted(init);
     <a-card title="编辑关于我">
       <div class="grid gap-3">
         <a-input v-model:value="form.name" placeholder="昵称" />
+        <a-input v-model:value="form.tagline" placeholder="副标题（如：独立开发者 · 持续学习）" />
         <a-input v-model:value="form.email" placeholder="邮箱" />
         <a-input v-model:value="form.github" placeholder="GitHub 主页，如 github.com/你的用户名" />
         <a-textarea v-model:value="form.intro" :rows="6" placeholder="个人介绍" />
+        <a-textarea v-model:value="form.focusPointsText" :rows="5" placeholder="我在做什么（每行一条）" />
         <a-button type="primary" @click="submit">保存</a-button>
       </div>
     </a-card>
 
     <a-card title="预览">
       <p class="text-xl font-semibold text-gray-900">{{ about.name }}</p>
+      <p v-if="about.tagline?.trim()" class="mt-1 text-sm text-gray-600">{{ about.tagline }}</p>
       <p class="mt-2 text-gray-700">{{ about.intro }}</p>
+      <ul v-if="about.focusPoints.length > 0" class="mt-3 list-disc pl-5 text-sm text-gray-700">
+        <li v-for="item in about.focusPoints" :key="item">{{ item }}</li>
+      </ul>
       <p class="mt-3 text-sm text-gray-600">邮箱：{{ about.email }}</p>
       <p v-if="about.github?.trim()" class="mt-2 text-sm text-gray-600">
         GitHub：

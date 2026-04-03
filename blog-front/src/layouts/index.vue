@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
-import { ConfigProvider, theme as antdTheme } from 'ant-design-vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import { ConfigProvider, Modal, theme as antdTheme } from 'ant-design-vue';
 import type { RouteRecordName } from 'vue-router';
 import { RouterView, useRoute, useRouter } from 'vue-router';
 
@@ -16,6 +16,7 @@ const route = useRoute();
 const router = useRouter();
 const themeMode = ref<ThemeMode>('light');
 const mobileMenuOpen = ref(false);
+const contentScrollRef = ref<HTMLElement | null>(null);
 
 const isDark = computed(() => themeMode.value === 'dark');
 
@@ -98,6 +99,45 @@ const goTo = async (name: string) => {
   mobileMenuOpen.value = false;
 };
 
+const isExternalHttpUrl = (href: string) => {
+  try {
+    const url = new URL(href, window.location.origin);
+    return (url.protocol === 'http:' || url.protocol === 'https:') && url.origin !== window.location.origin;
+  } catch {
+    return false;
+  }
+};
+
+const onRootClickCapture = (event: MouseEvent) => {
+  if (event.defaultPrevented) return;
+  const target = event.target as HTMLElement | null;
+  if (!target) return;
+  const anchor = target.closest('a[href]') as HTMLAnchorElement | null;
+  if (!anchor) return;
+  const href = anchor.getAttribute('href');
+  if (!href || !isExternalHttpUrl(href)) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  const resolved = new URL(href, window.location.origin).toString();
+  const nextTarget = anchor.target || '_self';
+  Modal.confirm({
+    title: '即将跳转外部网站',
+    content: resolved,
+    okText: '继续访问',
+    cancelText: '取消',
+    onOk: () => {
+      if (nextTarget === '_blank') {
+        const opened = window.open(resolved, '_blank', 'noopener,noreferrer');
+        if (opened) opened.opener = null;
+        return;
+      }
+      window.location.assign(resolved);
+    },
+  });
+};
+
 onMounted(() => {
   const savedTheme = localStorage.getItem('theme-mode');
   if (savedTheme === 'light' || savedTheme === 'dark') {
@@ -115,9 +155,11 @@ watch(themeMode, (mode) => {
 
 watch(
   () => route.fullPath,
-  () => {
+  async () => {
     mobileMenuOpen.value = false;
     document.title = `${currentPageTitle.value} - ${appConfig.appTitle}`;
+    await nextTick();
+    contentScrollRef.value?.scrollTo({ top: 0, behavior: 'auto' });
   },
   { immediate: true }
 );
@@ -125,7 +167,8 @@ watch(
 
 <template>
   <div
-    class="min-h-screen bg-slate-100 transition-[background-color] duration-300 ease-in-out dark:bg-gray-950"
+    class="flex h-[100dvh] min-h-0 flex-col overflow-hidden bg-slate-100 transition-[background-color] duration-300 ease-in-out dark:bg-gray-950"
+    @click.capture="onRootClickCapture"
   >
     <ConfigProvider :theme="antTheme">
       <AppHeader
@@ -138,9 +181,38 @@ watch(
         @update-mobile-menu="mobileMenuOpen = $event"
         @toggle-theme="toggleTheme"
       />
-      <main class="mx-auto min-h-[calc(100vh-84px)] max-w-6xl px-6 py-8">
-        <RouterView />
+      <main
+        ref="contentScrollRef"
+        data-app-scroll-container="true"
+        class="min-h-0 flex-1 overflow-y-auto overflow-x-hidden"
+      >
+        <div class="mx-auto max-w-[90rem] px-6 py-8">
+          <RouterView v-slot="{ Component, route: currentRoute }">
+            <Transition name="page-switch" mode="out-in">
+              <component :is="Component" :key="currentRoute.fullPath" />
+            </Transition>
+          </RouterView>
+        </div>
       </main>
     </ConfigProvider>
   </div>
 </template>
+
+<style scoped>
+.page-switch-enter-active,
+.page-switch-leave-active {
+  transition: opacity 0.26s ease;
+}
+
+.page-switch-enter-from,
+.page-switch-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-switch-enter-active,
+  .page-switch-leave-active {
+    transition: opacity 0.01s linear;
+  }
+}
+</style>

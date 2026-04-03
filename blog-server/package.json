@@ -5,7 +5,12 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "sql:good-site-category-order": "node scripts/apply-good-site-category-order.js",
+    "sql:profile-extended-fields": "node scripts/apply-profile-extended-fields.js",
+    "sql:project-source-code-url": "node scripts/apply-project-source-code-url.js",
+    "seed:good-sites-mock": "node scripts/seed-good-sites-mock.js --clear",
+    "seed:front-menu-mock": "node scripts/seed-front-menu-mock.js"
   },
   "keywords": [],
   "author": "",
@@ -16,8 +21,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.0.0",
-    "mysql2": "^3.15.1",
-    "socket.io": "^4.8.3"
+    "mysql2": "^3.15.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

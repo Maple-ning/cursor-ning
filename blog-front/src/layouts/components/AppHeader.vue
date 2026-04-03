@@ -27,13 +27,13 @@ defineEmits<{
   <header
     class="app-top-header sticky top-0 z-20 border-b border-gray-200 bg-white/90 backdrop-blur transition-[background-color,border-color,color] duration-300 ease-in-out dark:border-gray-800 dark:bg-gray-900/90"
   >
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-      <RouterLink :to="{ name: 'home' }" class="text-lg font-semibold text-gray-900 dark:text-gray-100">
-        枫叶小站
-      </RouterLink>
-      <div class="flex items-center gap-2">
+    <div class="mx-auto max-w-6xl px-3 py-2 lg:px-6 lg:py-4">
+      <div class="hidden items-center justify-between lg:flex">
+        <RouterLink :to="{ name: 'home' }" class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          枫叶小站
+        </RouterLink>
         <a-button
-          class="md:!hidden"
+          class="!hidden"
           type="text"
           :aria-expanded="mobileMenuOpen"
           aria-label="切换导航菜单"
@@ -61,7 +61,7 @@ defineEmits<{
           </template>
         </a-button>
         <a-menu
-          class="blog-nav-menu hidden min-w-[420px] md:block"
+          class="blog-nav-menu"
           mode="horizontal"
           theme="light"
           :selected-keys="activeNavKeys"
@@ -84,16 +84,57 @@ defineEmits<{
           </template>
         </a-switch>
       </div>
+
+      <div class="flex items-center justify-end lg:hidden">
+        <a-button
+          type="text"
+          :aria-expanded="mobileMenuOpen"
+          aria-label="切换导航菜单"
+          @click="$emit('toggleMobileMenu')"
+        >
+          <template #icon>
+            <svg
+              v-if="!mobileMenuOpen"
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path d="M4 7h16M4 12h16M4 17h16" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <svg
+              v-else
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path d="M6 6l12 12M18 6L6 18" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </template>
+        </a-button>
+      </div>
     </div>
   </header>
   <a-drawer
     :open="mobileMenuOpen"
     placement="right"
     width="260"
-    class="md:!hidden"
-    title="导航"
+    class="lg:!hidden"
+    title="菜单"
     @update:open="$emit('updateMobileMenu', $event)"
   >
+    <div class="mb-3 flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 dark:border-slate-700">
+      <span class="text-sm text-slate-600 dark:text-slate-300">暗黑模式</span>
+      <a-switch :checked="isDark" @change="$emit('toggleTheme', $event)">
+        <template #checkedChildren>
+          <img :src="moonIcon" alt="暗黑模式" class="switch-icon" />
+        </template>
+        <template #unCheckedChildren>
+          <img :src="sunIcon" alt="亮色模式" class="switch-icon" />
+        </template>
+      </a-switch>
+    </div>
     <a-menu
       class="blog-nav-menu"
       mode="inline"

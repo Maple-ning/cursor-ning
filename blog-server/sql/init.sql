@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS projects (
   name VARCHAR(255) NOT NULL,
   description VARCHAR(500) NOT NULL,
   url VARCHAR(500) NOT NULL,
+  source_code_url VARCHAR(500) NULL,
   tech_stack JSON NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -27,7 +28,9 @@ CREATE TABLE IF NOT EXISTS projects (
 CREATE TABLE IF NOT EXISTS profile (
   id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(100) NOT NULL,
+  tagline VARCHAR(255) NULL,
   intro TEXT NOT NULL,
+  focus_points JSON NULL,
   email VARCHAR(255) NULL,
   github VARCHAR(500) NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -46,22 +49,8 @@ CREATE TABLE IF NOT EXISTS good_sites (
   INDEX idx_good_sites_category (category)
 );
 
-CREATE TABLE IF NOT EXISTS chat_rooms (
-  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  title VARCHAR(128) NOT NULL DEFAULT '聊天室',
-  share_code VARCHAR(16) NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE KEY uk_chat_share_code (share_code),
-  INDEX idx_chat_rooms_created (created_at)
-);
-
-CREATE TABLE IF NOT EXISTS chat_messages (
-  id BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
-  room_id BIGINT UNSIGNED NOT NULL,
-  sender_name VARCHAR(64) NOT NULL DEFAULT '匿名',
-  content TEXT NULL,
-  image_url VARCHAR(512) NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_chat_messages_room FOREIGN KEY (room_id) REFERENCES chat_rooms(id) ON DELETE CASCADE,
-  INDEX idx_chat_messages_room_time (room_id, id)
-);
+CREATE TABLE IF NOT EXISTS good_site_category_order (
+  category VARCHAR(100) NOT NULL PRIMARY KEY,
+  sort_order INT NOT NULL DEFAULT 0,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
